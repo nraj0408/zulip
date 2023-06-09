@@ -8,7 +8,7 @@ async function decrypt_manual() {
     return {
         key: new Uint8Array(await crypto.subtle.exportKey("raw", key)),
         pasted: new Promise((resolve) => {
-            const tokenElement = document.querySelector<HTMLInputElement>("#token");
+            const tokenElement = document.querySelector<HTMLInputElement>("#token")! ;
             tokenElement!.addEventListener("input", async () => {
                 document.querySelector<HTMLInputElement>("#bad-token")!.hidden = true;
                 document.querySelector<HTMLInputElement>("#submit")!.disabled = tokenElement!.value === "";
