@@ -1,20 +1,20 @@
-document.querySelector("#form").addEventListener("submit", () => {
-    document.querySelector("#bad-token").hidden = false;
+document.querySelector<HTMLInputElement>("#form")!.addEventListener("submit", () => {
+    document.querySelector<HTMLInputElement>("#bad-token")!.hidden = false;
 });
-document.querySelector("#token").focus();
+document.querySelector<HTMLInputElement>("#token")!.focus();
 
 async function decrypt_manual() {
     const key = await crypto.subtle.generateKey({name: "AES-GCM", length: 256}, true, ["decrypt"]);
     return {
         key: new Uint8Array(await crypto.subtle.exportKey("raw", key)),
         pasted: new Promise((resolve) => {
-            const tokenElement = document.querySelector("#token");
-            tokenElement.addEventListener("input", async () => {
-                document.querySelector("#bad-token").hidden = true;
-                document.querySelector("#submit").disabled = tokenElement.value === "";
+            const tokenElement = document.querySelector<HTMLInputElement>("#token");
+            tokenElement!.addEventListener("input", async () => {
+                document.querySelector<HTMLInputElement>("#bad-token")!.hidden = true;
+                document.querySelector<HTMLInputElement>("#submit")!.disabled = tokenElement!.value === "";
                 try {
                     const data = new Uint8Array(
-                        tokenElement.value.match(/../g).map((b) => Number.parseInt(b, 16)),
+                        tokenElement!.value.match(/../g)!.map((b) => Number.parseInt(b, 16)),
                     );
                     const iv = data.slice(0, 12);
                     const ciphertext = data.slice(12);
@@ -31,6 +31,8 @@ async function decrypt_manual() {
         }),
     };
 }
+
+
 
 (async () => {
     // Sufficiently new versions of the desktop app provide the
@@ -52,8 +54,8 @@ async function decrypt_manual() {
     );
 
     const token = await pasted;
-    document.querySelector("#form").hidden = true;
-    document.querySelector("#done").hidden = false;
+    document.querySelector<HTMLInputElement>("#form")!.hidden = true;
+    document.querySelector<HTMLInputElement>("#done")!.hidden = false;
     window.location.href = "/accounts/login/subdomain/" + encodeURIComponent(token);
 })();
 export {};
